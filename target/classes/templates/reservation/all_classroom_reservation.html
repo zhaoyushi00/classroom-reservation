@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>教室预约管理-自习预约管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png">
+    <!-- Base Styling  -->
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+    <!--        &lt;!&ndash; start logo components &ndash;&gt;-->
+    <!--        <div th:replace="~{commons/common::banner_logo}"></div>-->
+    <!--        &lt;!&ndash; End logo components &ndash;&gt;-->
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::sidebar}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="new_appointment main_container">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4 class="text-primary">教室预约管理</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/index}">首页</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/all_student_reservation}">教室预约管理</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card shadow">
+                            <div class="card-header">
+                                <form class="row m-rl w-100" th:action="@{/all_classroom_reservation}">
+                                    <div class="col-lg-3 col-sm-12">
+                                        <div class="form-group">
+                                            <input id="myInputTextField" class="form-control" type="text" placeholder="根据楼编号或者楼名称等搜索" name="searchByIdOrName">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-12">
+                                        <div class="form-group">
+                                            <select class="form-control table-filter-select form-select" name="selectedTime" >
+                                                <option value="" style="display: none">预约时间</option>
+                                                <option>07:00:00--08:00:00</option>
+                                                <option>08:00:00--09:00:00</option>
+                                                <option>09:00:00--10:00:00</option>
+                                                <option>10:00:00--11:00:00</option>
+                                                <option>11:00:00--12:00:00</option>
+                                                <option>12:00:00--13:00:00</option>
+                                                <option>13:00:00--14:00:00</option>
+                                                <option>14:00:00--15:00:00</option>
+                                                <option>15:00:00--16:00:00</option>
+                                                <option>16:00:00--17:00:00</option>
+                                                <option>17:00:00--18:00:00</option>
+                                                <option>18:00:00--19:00:00</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-12">
+                                        <div class="form-group">
+                                            <input id="daterange" class="form-control input-daterange-datepicker" name="selectDate">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-3 col-sm-12">
+                                        <div class="form-group">
+                                            <button type="submit" class="btn btn-primary w-100 h-56" data-bs-toggle="modal" data-bs-target="#newAppointment">搜索</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="display nowrap dataTable">
+                                        <thead>
+                                        <tr>
+                                            <th>教室名称</th>
+                                            <th>第几层</th>
+                                            <th>教学楼</th>
+                                            <th>预约时间段</th>
+                                            <th>日期</th>
+                                            <th>已预约学生</th>
+                                            <th>座位数</th>
+                                            <th>利用率</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            <div th:each="classroom:${classrooms}">
+                                                <tr th:each="studentReservation:${classroom.getStudentReservations()}">
+                                                    <td th:text="${classroom.getRoom_name()}"></td>
+                                                    <td th:text="${classroom.getRoom_floor()}"></td>
+                                                    <td th:text="${classroom.getT_building().getBuilding_name()}"></td>
+                                                    <td th:text="${studentReservation.getRoomAvailableTimeInfo().getTimeTable().getTime_begin()}
+                                                    + '——'
+                                                    + ${studentReservation.getRoomAvailableTimeInfo().getTimeTable().getTime_end()}"></td>
+                                                    <td th:text="${studentReservation.getReservation_date()}"></td>
+                                                    <td th:text="${studentReservation.getRoomAvailableTimeInfo().getReservation_num()}"></td>
+                                                    <td th:text="${classroom.getAvailable_seat()}"></td>
+                                                    <td th:text="${@CommonUtil.toUseRate(studentReservation.getRoomAvailableTimeInfo().getReservation_num(),classroom.getAvailable_seat())}"></td>
+                                                </tr>
+                                            </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+
+</div>
+
+
+<!-- JQuery v3.5.1 -->
+<script th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+
+<!-- popper js -->
+<script th:src="@{/assets/plugins/popper/popper.min.js}"></script>
+
+<!-- Bootstrap -->
+<script th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Moment -->
+<script th:src="@{/assets/plugins/moment/moment.min.js}"></script>
+
+<!-- Date Range Picker -->
+<script th:src="@{/assets/plugins/daterangepicker/daterangepicker.min.js}"></script>
+
+<!-- Datatable -->
+<script th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/init-tdatatable.js}"></script>
+
+<!-- Main Custom JQuery -->
+<script th:src="@{/assets/js/toggleFullScreen.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+</body>
+
+</html>

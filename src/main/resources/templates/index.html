@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>首页-自习预约管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png">
+    <!-- Base Styling  -->
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+
+<!--    &lt;!&ndash; start logo components &ndash;&gt;-->
+<!--    <div th:replace="~{commons/common::banner_logo}"></div>-->
+<!--    &lt;!&ndash; End logo components &ndash;&gt;-->
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::sidebar(active='index')}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="row page-titles mx-0">
+                <div class="col-lg-12 p-md-0">
+                    <h4 class="text-primary"><span class="names" th:text="'管理员' + ${session.login_user.getS_name()} + ',你好'"></span></h4>
+                </div>
+            </div>
+
+            <div class="main_container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="widget card card-primary">
+                            <div class="card-body">
+                                <div class="media text-center">
+                                        <span>
+                                            <i class="fas fa-users fa-2x"></i>
+                                        </span>
+                                    <div class="media-body">
+                                        <span class="text-white">学生数</span>
+                                        <h3 class="mb-0 text-white" th:text="${countStudent}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="widget card card-secondary">
+                            <div class="card-body">
+                                <div class="media text-center">
+                                        <span>
+                                            <i class="fas fa-school fa-2x"></i>
+                                        </span>
+                                    <div class="media-body">
+                                        <span class="text-white">教室数</span>
+                                        <h3 class="mb-0 text-white" th:text="${countClassroom}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="widget card card-success">
+                            <div class="card-body">
+                                <div class="media text-center">
+                                        <span>
+                                            <i class="fas fa-calendar-check fa-2x"></i>
+                                        </span>
+                                    <div class="media-body">
+                                        <span class="text-white">预约数</span>
+                                        <h3 class="mb-0 text-white" th:text="${countReservation}"></h3>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card shadow">
+                            <div class="card-header">
+                                <h4 class="card-title">学生预约</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="display nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>学生</th>
+                                            <th>学号</th>
+                                            <th>专业</th>
+                                            <th>班级</th>
+                                            <th>年级</th>
+                                            <th>联系方式</th>
+                                            <th>预约成功</th>
+                                            <th>预约取消</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr th:each="student:${students}">
+                                            <td th:text="${student.getS_name()}"></td>
+                                            <td th:text="${student.getS_id()}"></td>
+                                            <td th:text="${student.getS_major()}"></td>
+                                            <td th:text="${student.getS_class()}"></td>
+                                            <td th:text="${student.getS_year()}"></td>
+                                            <td th:text="${student.getS_phone_number()}"></td>
+                                            <td th:text="${student.getSuc_num()}"></td>
+                                            <td th:text="${student.getCanceled_num()}"></td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+
+
+
+
+</div>
+
+
+<!-- JQuery v3.5.1 -->
+<script src="assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- popper js -->
+<script src="assets/plugins/popper/popper.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="assets/plugins/bootstrap/js/bootstrap.js"></script>
+
+<!-- Moment -->
+<script src="assets/plugins/moment/moment.min.js"></script>
+
+<!-- Date Range Picker -->
+<script src="assets/plugins/daterangepicker/daterangepicker.min.js"></script>
+
+<!-- Datatable -->
+<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/js/init-tdatatable.js"></script>
+
+<!-- Chart js -->
+<script src="assets/plugins/chart/chart/Chart.min.js"></script>
+<script src="assets/js/charts-custom.js"></script>
+
+<!-- Main Custom JQuery -->
+<script src="assets/js/toggleFullScreen.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

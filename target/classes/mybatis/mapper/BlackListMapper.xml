@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mango.dao.BlackListDao">
+
+    <!--     根据学号，时间增加黑名单-->
+    <insert id="addStudentBlackList" parameterType="BlackList">
+        insert into reservation_demo.blacklist(s_id, date_begin, date_end, state, blacker_id)
+        values (#{s_id}, #{date_begin}, #{date_end}, #{state}, #{blacker_id})
+    </insert>
+
+    <!--    获取所有学生-->
+    <select id="getAllBlackedStudent" resultMap="allBlackedStudent">
+        select stu.*, b.date_begin, b.date_end, b.state, b.blacker_id
+        from reservation_demo.student stu,
+             reservation_demo.blacklist b
+        where stu.s_id = b.s_id
+    </select>
+
+    <resultMap id="allBlackedStudent" type="Student">
+        <id property="s_id" column="s_id"/>
+        <result property="s_name" column="s_name"/>
+        <result property="s_class" column="s_class"/>
+        <result property="s_major" column="s_major"/>
+        <result property="s_year" column="s_year"/>
+        <association property="blackList" javaType="BlackList">
+            <id property="s_id" column="b_s_id"/>
+            <result property="date_begin" column="date_begin"/>
+            <result property="date_end" column="date_end"/>
+            <result property="state" column="state"/>
+            <result property="blacker_id" column="blacker_id"/>
+        </association>
+    </resultMap>
+
+
+    <!--    删除黑名单学生-->
+    <delete id="deleteStudentBlackList">
+        delete
+        from reservation_demo.blacklist
+        where s_id = #{s_id}
+    </delete>
+
+    <!--    搜索是否存在-->
+    <select id="getBlackedStudentById" resultType="BlackList">
+        select *
+        from reservation_demo.blacklist
+        where s_id = #{s_id}
+    </select>
+
+</mapper>

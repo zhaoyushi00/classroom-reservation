@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mango.dao.ReservationDao">
+
+
+    <!--    获取所有的学生预约情况，带搜索功能-->
+    <select id="getAllStudentReservationInfo" parameterType="Student" resultMap="studentReservationInfo">
+        select stu.s_name,
+        sr.s_id sr_s_id,
+        sr.room_id sr_room_id,
+        sr.room_name,
+        sr.time_id sr_time_id,
+        sr.building_id sr_building_id,
+        tb.time_begin,
+        tb.time_end,
+        sr.reservation_date,
+        stu.s_phone_number,
+        b.building_name ra_building_id,
+        sr.state
+        from reservation_demo.student stu,
+        reservation_demo.time_table tb,
+        reservation_demo.student_reservation sr,
+        reservation_demo.room_available_time_info ra,
+        reservation_demo.t_building b
+        where stu.s_id = sr.s_id
+        and sr.time_id = ra.time_id
+        and sr.room_id = ra.room_id
+        and sr.building_id = ra.building_id
+        and sr.reservation_date = ra.available_date
+        and ra.time_id = tb.time_id
+        and ra.room_id = tb.room_id
+        and ra.building_id = tb.building_id
+        and sr.building_id = b.building_id
+        <if test="s_id != null">
+            and (stu.s_id = #{s_id} or stu.s_name = #{s_id})
+        </if>
+        <if test="s_major != null">
+            and stu.s_major = #{s_major}
+        </if>
+        <if test="s_year != null">
+            and stu.s_year = #{s_year}
+        </if>
+    </select>
+
+    <resultMap id="studentReservationInfo" type="Student">
+        <id property="s_id" column="ss_id"/>
+        <result property="s_name" column="s_name"/>
+        <result property="s_phone_number" column="s_phone_number"/>
+        <collection property="studentReservations" ofType="StudentReservation">
+            <id property="s_id" column="sr_s_id"/>
+            <id property="reservation_date" column="reservation_date"/>
+            <id property="time_id" column="sr_time_id"/>
+            <id property="room_id" column="sr_room_id"/>
+            <id property="building_id" column="sr_building_id"/>
+            <result property="room_name" column="room_name"/>
+            <result property="state" column="state"/>
+            <association property="roomAvailableTimeInfo" javaType="RoomAvailableTimeInfo">
+                <id property="building_id" column="ra_building_id"/>
+                <association property="timeTable" javaType="TimeTable">
+                    <result property="time_begin" column="time_begin"/>
+                    <result property="time_end" column="time_end"/>
+                </association>
+            </association>
+        </collection>
+    </resultMap>
+
+    <!-- 带搜索查询所有教室预约信息-->
+    <select id="getAllClassroomReservationInfo" parameterType="Map" resultMap="classroomReservationInfo">
+        select sr.room_name, cr.room_floor, tb.building_name, tt.time_begin, tt.time_end,
+        sr.reservation_date,cr.available_seat,
+        count(sr.s_id) reservation_num
+        from reservation_demo.t_building tb,
+        reservation_demo.classroom cr,
+        reservation_demo.time_table tt,
+        reservation_demo.student_reservation sr,
+        reservation_demo.room_available_time_info ra
+        where sr.time_id = ra.time_id
+        and sr.room_id = ra.room_id
+        and sr.building_id = ra.building_id
+        and sr.reservation_date = ra.available_date
+        and ra.time_id = tt.time_id
+        and ra.room_id = tt.room_id
+        and ra.building_id = tt.building_id
+        and tt.room_id = cr.room_id
+        and tt.building_id = cr.building_id
+        and cr.building_id = tb.building_id
+        <if test="room_id != null">
+            and (cr.room_id = #{room_id} or cr.room_name = #{room_id})
+        </if>
+        <if test="time_begin != null">
+            and tt.time_begin = #{time_begin}
+        </if>
+        <if test="time_end != null">
+            and tt.time_end = #{time_end}
+        </if>
+        <if test="date_begin != null">
+            and ra.available_date <![CDATA[>=]]> #{date_begin}
+        </if>
+        <if test="date_end != null">
+            and ra.available_date <![CDATA[<=]]> #{date_end}
+        </if>
+
+        group by sr.room_name, cr.room_floor, tb.building_name, tt.time_begin, tt.time_end, sr.reservation_date,cr.available_seat
+    </select>
+
+    <resultMap id="classroomReservationInfo" type="Classroom">
+        <id property="room_id" column="room_id"/>
+        <result property="room_name" column="room_name"/>
+        <result property="room_floor" column="room_floor"/>
+        <result property="available_seat" column="available_seat"/>
+        <association property="t_building" javaType="T_building">
+            <result property="building_name" column="building_name"/>
+        </association>
+        <collection property="studentReservations" ofType="StudentReservation">
+            <id property="room_id" column="sr_room_id"/>
+            <id property="reservation_date" column="reservation_date"/>
+            <result property="room_name" column="room_name"/>
+            <association property="roomAvailableTimeInfo" javaType="RoomAvailableTimeInfo">
+                <result property="reservation_num" column="reservation_num"/>
+                <association property="timeTable" javaType="TimeTable">
+                    <result property="time_begin" column="time_begin"/>
+                    <result property="time_end" column="time_end"/>
+                </association>
+            </association>
+        </collection>
+    </resultMap>
+
+
+    <!--    查询所有可用教室信息-->
+    <select id="getAllAvailableClassroom" parameterType="Map" resultMap="allAvailableClassroom">
+        select cr.room_name,
+        cr.room_floor,
+        tb.building_location,
+        tb.building_name,
+        tt.time_begin,
+        tt.time_end,
+        ra.available_date,
+        ra.available_num,
+        ra.reservation_num,
+        ra.time_id ra_time_id,
+        ra.room_id ra_room_id,
+        ra.building_id ra_building_id
+        from reservation_demo.t_building tb,
+        reservation_demo.classroom cr,
+        reservation_demo.time_table tt,
+        reservation_demo.room_available_time_info ra
+        where cr.building_id = tb.building_id
+        and ra.time_id = tt.time_id
+        and ra.room_id = tt.room_id
+        and ra.building_id = tt.building_id
+        and tt.room_id = cr.room_id
+        and tt.building_id = cr.building_id
+        <if test="selectLocation != null">
+            and tb.building_location = #{selectLocation}
+        </if>
+        <if test="selectBuildingName != null">
+            and tb.building_name = #{selectBuildingName}
+        </if>
+        <if test="selectRoomName != null">
+            and cr.room_name = #{selectRoomName}
+        </if>
+        <if test="selectRoomFloor != null">
+            and cr.room_floor = #{selectRoomFloor}
+        </if>
+        <if test="time_begin != null">
+            and tt.time_begin = #{time_begin}
+        </if>
+        <if test="time_end != null">
+            and tt.time_end = #{time_end}
+        </if>
+        <if test="date_begin != null">
+            and ra.available_date <![CDATA[>=]]> #{date_begin}
+        </if>
+        <if test="date_end != null">
+            and ra.available_date <![CDATA[<=]]> #{date_end}
+        </if>
+        <if test="room_id_and_time_id != null">
+            and
+            <foreach collection="room_id_and_time_id" index="key" item="value" open="(" separator="or" close=")">
+                <foreach collection="value.entrySet()" index="room_id" item="time_id" open="(" separator="" close=")">
+                    ra.room_id = #{room_id} and ra.time_id = #{time_id}
+                </foreach>
+            </foreach>
+        </if>
+
+    </select>
+
+    <resultMap id="allAvailableClassroom" type="Classroom">
+        <id property="room_id" column="room_id"/>
+        <id property="building_id" column="building_id"/>
+        <result property="room_name" column="room_name"/>
+        <result property="room_floor" column="room_floor"/>
+        <association property="t_building" javaType="T_building">
+            <id property="building_id" column="tb_building_id"/>
+            <result property="building_name" column="building_name"/>
+            <result property="building_location" column="building_location"/>
+        </association>
+        <collection property="roomAvailableTimeInfos" ofType="RoomAvailableTimeInfo">
+            <id property="time_id" column="ra_time_id"/>
+            <id property="room_id" column="ra_room_id"/>
+            <id property="building_id" column="ra_building_id"/>
+            <id property="available_date" column="available_date"/>
+            <result property="available_num" column="available_num"/>
+            <result property="reservation_num" column="reservation_num"/>
+            <association property="timeTable" javaType="TimeTable">
+                <id property="time_id" column="tt_time_id"/>
+                <id property="room_id" column="tt_room_id"/>
+                <id property="building_id" column="tt_building_id"/>
+                <result property="time_begin" column="time_begin"/>
+                <result property="time_end" column="time_end"/>
+            </association>
+        </collection>
+    </resultMap>
+
+
+    <!--    根据学号查询所有取消预约的信息-->
+    <select id="getAllCanceledReservationDateById" resultType="java.lang.String">
+        select to_days(reservation_date)
+        from reservation_demo.student_reservation
+        where state = '预约取消'
+          and s_id = #{s_id}
+    </select>
+
+</mapper>

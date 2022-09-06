@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>个人信息设置-自习预约设置管理</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png">
+    <!-- Base Styling  -->
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::student_sidebar(active='personal_settings')}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="main_container">
+
+
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 ">
+                        <div class="welcome-text">
+                            <h4 class="text-primary">设置</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/index}">首页</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/personal_settings}">个人信息设置</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="doctor-info-content">
+                            <div class="tab-content" id="myTabContent">
+                                <div class="tab-pane active" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                                    <div class="row m-t-30 m-l-0 m-r-0">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4 class="card-title">个人信息</h4>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="basic-form">
+                                                    <form th:action="@{/updateStudentInfo}">
+                                                        <div class="row">
+                                                            <div class="col-xl-4">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <label class="form-label">学号</label>
+                                                                        <input type="text" class="form-control"
+                                                                               th:placeholder="${login_user.getS_id()}"
+                                                                               readonly>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <label class="form-label">姓名</label>
+                                                                        <input type="text" class="form-control"
+                                                                               th:placeholder="${login_user.getS_name()}"
+                                                                               name="s_name">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <label class="form-label">年级</label>
+                                                                        <select class="form-control form-select"
+                                                                                name="s_year">
+                                                                            <option value="" style="display: none"
+                                                                                    th:inline="text">
+                                                                                [[${login_user.getS_year()}]]
+                                                                            </option>
+                                                                            <option>1</option>
+                                                                            <option>2</option>
+                                                                            <option>3</option>
+                                                                            <option>4</option>
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="row">
+                                                            <div class="col-xl-4">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <label class="form-label">专业</label>
+                                                                        <input type="text" class="form-control"
+                                                                               th:placeholder="${login_user.getS_major()}"
+                                                                               name="s_major">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <label class="form-label">班级</label>
+                                                                        <input type="text" class="form-control"
+                                                                               th:placeholder="${login_user.getS_class()}"
+                                                                               name="s_class">
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-xl-4">
+                                                                <div class="form-group row">
+                                                                    <div class="col-lg-12">
+                                                                        <label class="form-label">联系方式</label>
+                                                                        <input type="text" class="form-control"
+                                                                               th:placeholder="${login_user.getS_phone_number()}"
+                                                                               name="s_phone_number">
+                                                                    </div>
+                                                                </div>
+                                                                <div class="form-group text-right">
+                                                                    <button type="button" class="btn btn-primary float-end edit" data-bs-toggle='modal' data-bs-target='#changePersonalInfo'>
+                                                                        保存
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="modal fade" id="changePersonalInfo" tabindex="-1"
+                                                             role="dialog" aria-labelledby="modal-title-edit-modal">
+                                                            <div class="modal-dialog modal-dialog-centered"
+                                                                 role="document">
+                                                                <div class="modal-content">
+                                                                    <div class="modal-header">
+                                                                        <h5 class="modal-title">
+                                                                            提示信息
+                                                                        </h5>
+                                                                        <button type="button" class="close"
+                                                                                data-bs-dismiss="modal" aria-label="Close"><span
+                                                                                aria-hidden="true">&times;</span></button>
+                                                                    </div>
+                                                                    <div class="modal-body top-info">
+                                                                        <p style="font-size: 22px;font-weight: bold">是否保存</p>
+                                                                    </div>
+                                                                    <div class="modal-footer">
+                                                                        <button type="submit" class="btn badge-primary">保存
+                                                                        </button>
+                                                                        <button type="button" class="btn btn-danger"
+                                                                                data-bs-dismiss="modal">关闭
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4 class="card-title"> 修改密码 </h4>
+                                            </div>
+                                            <form class="card-body" th:action="@{/changePassword}">
+
+                                                <div>
+                                                    <div class="row g-3 align-items-center">
+                                                        <div class="col-xl-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label">密码</label>
+                                                                <input type="text" class="form-control" placeholder="密码"
+                                                                       name="old_password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-6">
+
+                                                        </div>
+                                                        <div class="col-xl-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label">新密码</label>
+                                                                <input type="password" class="form-control"
+                                                                       placeholder="新密码" name="new_password">
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-xl-6">
+                                                            <div class="form-group">
+                                                                <label class="form-label">确认新密码</label>
+                                                                <input type="password" class="form-control"
+                                                                       placeholder="确认新密码" name="cm_password">
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <button type="button" class="btn btn-primary float-end edit"
+                                                            data-bs-toggle='modal' data-bs-target='#changePassword'>
+                                                        确认修改
+                                                    </button>
+                                                </div>
+                                                <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}" class="text-center"></p>
+                                                <div class="modal fade" id="changePassword" tabindex="-1"
+                                                     role="dialog" aria-labelledby="modal-title-edit-modal">
+                                                    <div class="modal-dialog modal-dialog-centered"
+                                                         role="document">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">
+                                                                    提示信息
+                                                                </h5>
+                                                                <button type="button" class="close"
+                                                                        data-bs-dismiss="modal" aria-label="Close"><span
+                                                                        aria-hidden="true">&times;</span></button>
+                                                            </div>
+                                                            <div class="modal-body top-info">
+                                                                <p style="font-size: 22px;font-weight: bold">是否确认修改</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn badge-primary">
+                                                                    确认修改
+                                                                </button>
+                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                                                                    关闭
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- End section content -->
+
+<!-- Modal -->
+
+<!--End Modal -->
+
+
+<!-- JQuery v3.5.1 -->
+<script th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+
+<!-- popper js -->
+<script th:src="@{assets/plugins/popper/popper.min.js}"></script>
+
+<!-- Bootstrap -->
+<script th:src="@{assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Moment -->
+<script th:src="@{assets/plugins/moment/moment.min.js}"></script>
+
+<!-- Date Range Picker -->
+<script th:src="@{assets/plugins/daterangepicker/daterangepicker.min.js}"></script>
+
+<!-- Datatable -->
+<script th:src="@{assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/init-tdatatable.js}"></script>
+
+<!-- Main Custom JQuery -->
+<script th:src="@{assets/js/toggleFullScreen.js}"></script>
+<script th:src="@{assets/js/main.js}"></script>
+
+
+</body>
+
+</html>

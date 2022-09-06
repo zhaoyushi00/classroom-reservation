@@ -1,0 +1,14 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/mybatis?serverTimezone=UTC&useSSL=false&useUnicode=true&charsetEncoding=UTF-8
+    username: root
+    password: lsx35936030
+  thymeleaf:
+    cache: false
+
+mybatis:
+  type-aliases-package: com.mango.pojo
+  mapper-locations: classpath:mybatis/mapper/*.xml
+server:
+  port: 9099

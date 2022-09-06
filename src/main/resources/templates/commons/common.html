@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<!--&lt;!&ndash; start logo components &ndash;&gt;-->
+<!--<div class="nav-header" th:fragment="banner_logo">-->
+<!--    <div class="brand-logo">-->
+<!--        <a href="index.html"> <img class="logo-tabib" src="assets/images/download.png" alt=""></a>-->
+<!--        <a href="index.html"><img class="brand-title" src="assets/images/logo.png" alt=""></a>-->
+<!--    </div>-->
+<!--</div>-->
+
+
+
+<!-- start admin index-->
+
+<!-- header -->
+<div class="header" th:fragment="header">
+    <header class="top-head container-fluid">
+        <div class="nav-control">
+            <div class="hamburger">
+                <span class="line"></span><span class="line"></span><span class="line"></span>
+            </div>
+            <div class="left-header content-header__menu">
+                <ul class="list-unstyled">
+                    <li class="nav-link btn">
+                        <a th:href="@{/make_reservation}"><i class="far fa-calendar-check"></i> <span> Make an Reservation</span></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="header-right">
+            <div class="fullscreen notification_dropdown">
+                <div class="full">
+                    <a class="text-dark" href="#!" onclick="javascript:toggleFullScreen()">
+                        <i class="fas fa-expand"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="my-account-wrapper">
+                <div class="account-wrapper">
+                    <div class="account-control">
+                        <a class="login header-profile" href="#" title="Sign in">
+                            <div class="header-info">
+                                <span th:text="${session.login_user.getS_name()}"></span>
+                                <small th:text="${session.login_user.getS_id()=='admin'?'管理员':'学生'}"></small>
+                            </div>
+                        </a>
+                        <div class="account-dropdown-form dropdown-container">
+                            <div class="form-content">
+                                <a th:href="@{/login}">
+                                    <i class="fas fa-sign-in-alt"></i>
+                                    <span class="ml-2">Logout</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+</div>
+
+<!-- sidebar -->
+<aside class="left-panel nicescroll-box" th:fragment="sidebar">
+    <nav class="navigation">
+        <ul class="list-unstyled main-menu">
+            <li th:class="${active=='index'?'has-submenu active':'has-submenu'}">
+                <a th:href="@{/index}" class="has-submenu active">
+                    <i class="fas fa-th-large"></i>
+                    <span class="nav-label">首页</span>
+                </a>
+            </li>
+
+
+            <li th:class="${active=='all_student'?'has-submenu active':'has-submenu'}" >
+                <a th:href="@{/all_student}">
+                    <i class="fas fa-users"></i>
+                    <span class="nav-label">学生信息管理</span>
+                </a>
+            </li>
+
+
+            <li th:class="${active=='all_classroom'?'has-submenu active':'has-submenu'}">
+                <a th:href="@{/all_classroom}">
+                    <i class="fas fa-warehouse"></i>
+                    <span class="nav-label">教室信息管理</span>
+                </a>
+            </li>
+
+
+
+            <li class="has-submenu">
+                <a href="#" class="has-arrow mm-collapsed">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="nav-label">预约管理</span>
+                </a>
+                <ul class="list-unstyled mm-collapse">
+                    <li class="active"><a th:href="@{/all_student_reservation}">学生预约管理</a></li>
+                    <li><a th:href="@{/all_classroom_reservation}">教室预约管理</a></li>
+                </ul>
+            </li>
+
+            <li th:class="${active=='blacklist'?'has-submenu active':'has-submenu'}">
+                <a th:href="@{/blacklist}">
+                    <i class="fas fa-skull-crossbones"></i>
+                    <span class="nav-label">黑名单</span>
+                </a>
+            </li>
+
+
+        </ul>
+    </nav>
+</aside>
+
+<!-- end admin index-->
+
+
+<!-- start student index-->
+
+<!-- student_index sidebar -->
+<aside class="left-panel nicescroll-box" th:fragment="student_sidebar">
+    <nav class="navigation">
+        <ul class="list-unstyled main-menu">
+            <li th:class="${active=='student_index'?'has-submenu active':'has-submenu'}">
+                <a th:href="@{/student_index}" class="has-submenu active">
+                    <i class="fas fa-th-large"></i>
+                    <span class="nav-label">首页</span>
+                </a>
+            </li>
+
+            <li class="has-submenu">
+                <a href="#" class="has-arrow mm-collapsed">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span class="nav-label">预约管理</span>
+                </a>
+                <ul class="list-unstyled mm-collapse">
+                    <li class="active"><a th:href="@{/make_reservation}">预约自习室</a></li>
+                    <li><a th:href="@{/user_reservation}">我的预约</a></li>
+                </ul>
+            </li>
+
+
+            <li th:class="${active=='personal_settings'?'has-submenu active':'has-submenu'}">
+                <a th:href="@{/personal_settings}">
+                    <i class="fas fa-cog"></i>
+                    <span class="nav-label">设置</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</aside>
+
+<!-- end student index-->
+
+
+
+
+
+
+</body>
+</html>

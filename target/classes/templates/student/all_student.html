@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>学生信息管理-自习预约管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" th:href="@{/assets/images/favicon-32x32.png}">
+    <link rel="stylesheet" th:href="@{assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::sidebar(active='all_student')}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="all-patients main_container">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4 class="text-primary">学生信息管理</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/index}">首页</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/all_student}">学生信息管理</a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header fix-card">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h4 class="card-title"> 学生信息 </h4>
+                                    </div>
+                                    <!--  回头弄个下拉框-->
+                                    <div class="col-4 form-group text-end">
+                                        <button type="button" class="btn btn-primary" data-bs-toggle='modal' data-bs-target='#modal-add-student'>添加新学生</button>
+                                        <button type="button" class="btn btn-dark" data-bs-toggle='modal' data-bs-target='#modal-blacklist'>设置黑名单</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="display nowrap">
+                                        <thead>
+                                            <tr>
+                                                <th>学号</th>
+                                                <th>姓名</th>
+                                                <th>班级</th>
+                                                <th>专业</th>
+                                                <th>年级</th>
+                                                <th>联系方式</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr th:each="student:${students}">
+                                                <td th:text="${student.getS_id()}"></td>
+                                                <td th:text="${student.getS_name()}"></td>
+                                                <td th:text="${student.getS_major()}"></td>
+                                                <td th:text="${student.getS_class()}">
+                                                <td th:text="${student.getS_year()}"></td>
+                                                <td th:text="${student.getS_phone_number()}"></td>
+                                                <td>
+
+                                                    <a data-bs-toggle='modal' th:attr="data-bs-target='#modal-blacklist'+${student.getS_id()}"  class='mr-4'>
+                                                        <span class='fas fa-skull-crossbones'></span>
+                                                    </a>
+
+                                                    <a data-bs-toggle='modal' th:attr="data-bs-target='#modal-delete-student'+${student.getS_id()}"  class='mr-4'>
+                                                        <span class='fas fa-trash-alt'></span>
+                                                    </a>
+                                                    <div class="modal fade" th:attr="id='modal-blacklist'+${student.getS_id()}"  tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                                        <form class="modal-dialog" th:action="@{/set_student_black_list}">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">设置黑名单信息</h5>
+                                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                </div>
+                                                                <div class="modal-body">
+                                                                    <form>
+                                                                        <div class="mb-3">
+                                                                            <label for="s_id" class="col-form-label">学号</label>
+                                                                            <input type="text" class="form-control" th:placeholder="${student.getS_id()}" th:value="${student.getS_id()}" readonly name="selectStudentId" id="s_id">
+                                                                        </div>
+                                                                        <div class="mb-3">
+                                                                            <label class="col-form-label">设置时间</label>
+                                                                            <input type="text"  class="form-control input-daterange-datepicker" name="selectDate">
+                                                                        </div>
+                                                                    </form>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <button type="submit" class="btn btn-primary">确认添加</button>
+                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+
+                                                                </div>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal fade" th:attr="id='modal-delete-student'+${student.getS_id()}"  tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-modal">
+                                                        <div class="modal-dialog modal-dialog-centered" role="document" >
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">
+                                                                        提示信息
+                                                                    </h5>
+                                                                    <button type="button" class="close"
+                                                                            data-bs-dismiss="modal" aria-label="Close"><span
+                                                                            aria-hidden="true">&times;</span></button>
+                                                                </div>
+                                                                <div class="modal-body top-info">
+                                                                    <p style="font-size: 22px;font-weight: bold">是否确认删除该学生</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a type="button" class="btn badge-primary" th:href="@{/student_delete(s_id=${student.getS_id()})}">
+                                                                        确认删除
+                                                                    </a>
+                                                                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                                                                        关闭
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+
+
+</div>
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-add-student"  tabindex="-1" aria-labelledby="modal-title-edit-row" aria-hidden="true">
+    <form class="modal-dialog modal-lg" th:action="@{/add_new_student}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-title-edit-row">添加新学生</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="basic-form">
+                            <form>
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="学号" name="s_id">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="姓名" name="s_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="专业" name="s_major">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <input type="text" class="form-control" placeholder="班级" name="s_class">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <input type="text" class="form-control" placeholder="年级" name="s_year">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <input type="text" class="form-control" placeholder="联系方式" name="s_phone_number">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">确认添加</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id="modal-blacklist" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <form class="modal-dialog" th:action="@{/set_student_black_list}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">设置黑名单信息</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div class="mb-3">
+                        <label for="student_id" class="col-form-label">学号</label>
+                        <select class="form-control form-select" id="student_id" name="selectStudentId">
+                            <option value="" style="display: none">选择学号</option>
+                            <option th:each="student:${students}" th:text="${student.getS_id()} + ': ' + ${student.getS_name()}" th:value="${student.getS_id()}"></option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="daterange" class="col-form-label">设置时间</label>
+                        <input id="daterange" class="form-control input-daterange-datepicker" name="selectDate">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">确认添加</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+
+            </div>
+        </div>
+    </form>
+</div>
+<!--End Modal -->
+
+
+<!-- JQuery v3.5.1 -->
+<script src="assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- popper js -->
+<script src="assets/plugins/popper/popper.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Moment -->
+<script src="assets/plugins/moment/moment.min.js"></script>
+
+<!-- Date Range Picker -->
+<script src="assets/plugins/daterangepicker/daterangepicker.min.js"></script>
+
+<!-- Datatable -->
+<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/js/init-tdatatable.js"></script>
+
+<!-- Main Custom JQuery -->
+<script src="assets/js/toggleFullScreen.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

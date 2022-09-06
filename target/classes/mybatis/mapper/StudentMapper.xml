@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mango.dao.StudentDao">
+
+    <!--    根据学号获取单个学生信息-->
+    <select id="getStudentById" resultType="Student">
+        select *
+        from reservation_demo.student
+        where s_id = #{s_id}
+    </select>
+
+
+    <update id="updatePassword">
+        update reservation_demo.student
+        <set>
+            <if test="`password` != null">
+                `password` = #{new_password}
+            </if>
+        </set>
+        where s_id = #{s_id}
+    </update>
+
+    <!--    获取除了管理员以外的所有学生-->
+    <select id="getAll" resultType="Student">
+        select *
+        from reservation_demo.student
+        where s_id != 'admin';
+    </select>
+
+
+    <!--    根据s_id更新学生信息-->
+    <update id="updateStudentInfo" parameterType="Student">
+        update reservation_demo.student
+        <set>
+            <if test="s_name != null">
+                s_name = #{s_name},
+            </if>
+            <if test="s_year != null">
+                s_year = #{s_year},
+            </if>
+            <if test="s_major != null">
+                s_major = #{s_major},
+            </if>
+            <if test="s_class != null">
+                s_class = #{s_class},
+            </if>
+            <if test="s_phone_number != null">
+                s_phone_number = #{s_phone_number}
+            </if>
+        </set>
+        where s_id = #{s_id}
+    </update>
+
+    <!--    获取带有预约成功数和预约取消数学生信息-->
+    <select id="countStudentReservation" parameterType="Student" resultMap="countReservation">
+        select stu.s_name,
+               stu.s_id,
+               stu.s_major,
+               stu.s_class,
+               stu.s_year,
+               stu.s_phone_number,
+               count(state = '预约成功' or null) suc_num,
+               count(state = '预约取消' or null) canceled_num
+        from reservation_demo.student_reservation sr,
+             reservation_demo.student stu
+        where stu.s_id = sr.s_id
+        group by s_id
+    </select>
+
+    <resultMap id="countReservation" type="Student">
+        <id property="s_id" column="s_id"/>
+        <result property="s_name" column="s_name"/>
+        <result property="s_major" column="s_major"/>
+        <result property="s_class" column="s_class"/>
+        <result property="s_year" column="s_year"/>
+        <result property="s_phone_number" column="s_phone_number"/>
+        <result property="suc_num" column="suc_num"/>
+        <result property="canceled_num" column="canceled_num"/>
+
+    </resultMap>
+
+    <!-- 根据s_id获得该学生预约总数,带搜索-->
+    <select id="countReservation" parameterType="Map" resultType="int">
+        select count(*) count_num
+        from reservation_demo.student stu,
+        reservation_demo.student_reservation sr
+        where stu.s_id = sr.s_id
+        and stu.s_id = #{s_id}
+        <if test="state != null">
+            and sr.state = #{state}
+        </if>
+    </select>
+
+
+    <!-- 添加学生预约信息-->
+    <insert id="addStudentReservation" parameterType="StudentReservation">
+        insert into reservation_demo.student_reservation(s_id, time_id, room_id, building_id, reservation_date, state,
+                                                         room_name)
+        VALUES (#{s_id}, #{time_id}, #{room_id}, #{building_id}, #{reservation_date}, #{state}, #{room_name})
+    </insert>
+
+    <!-- 删除学生预约信息-->
+    <delete id="deleteCancelReservation" parameterType="StudentReservation">
+        delete
+        from reservation_demo.student_reservation
+        where s_id = #{s_id}
+          and room_id = #{room_id}
+          and time_id = #{time_id}
+          and reservation_date = #{reservation_date}
+    </delete>
+
+    <!-- 添加新学生-->
+    <insert id="addStudent" parameterType="Student">
+        insert into reservation_demo.student(s_id, s_name, password, s_class, s_year, s_major, s_phone_number)
+        values (#{s_id}, #{s_name}, #{password}, #{s_class}, #{s_year}, #{s_major}, #{s_phone_number})
+    </insert>
+
+    <!-- 修改学生状态-->
+    <update id="updateStudentReservationState" parameterType="StudentReservation">
+        update reservation_demo.student_reservation
+        set state = '预约取消'
+        where s_id = #{s_id}
+          and room_id = #{room_id}
+          and time_id = #{time_id}
+          and reservation_date = #{reservation_date}
+    </update>
+
+    <!--    删除学生后，删除相关信息-->
+    <delete id="deleteStudentById">
+        delete from reservation_demo.student
+        where s_id = #{s_id}
+    </delete>
+
+    <delete id="deleteStudentBlackListById">
+        delete from reservation_demo.blacklist
+        where s_id = #{s_id}
+    </delete>
+
+    <delete id="deleteStudentReservationById">
+        delete from reservation_demo.student_reservation
+        where s_id = #{s_id}
+    </delete>
+</mapper>

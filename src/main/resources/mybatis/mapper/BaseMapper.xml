@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mango.dao.BaseDao">
+<!--    查询所有学生数量-->
+    <select id="countStudent" resultType="int">
+        select count(*) count_student
+        from reservation_demo.student
+        where s_id != 'admin'
+    </select>
+
+    <select id="countClassroom" resultType="int">
+        select count(*) count_classroom
+        from reservation_demo.classroom
+    </select>
+
+    <select id="countReservation" resultType="int">
+        select count(*) count_reservation
+        from reservation_demo.student_reservation
+    </select>
+
+
+</mapper>

@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>教室信息管理-自习预约管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" th:href="@{/assets/images/favicon-32x32.png}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::sidebar(active='all_classroom')}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="all-patients main_container">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4 class="text-primary">教室信息管理</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/index}">首页</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/all_classroom}">教室信息管理</a></li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="card">
+                            <div class="card-header fix-card">
+                                <div class="row">
+                                    <div class="col-8">
+                                        <h4 class="card-title"> 教室信息 </h4>
+                                    </div>
+                                    <!--  回头弄个下拉框-->
+                                    <div class="col-4 form-group text-end">
+                                        <button type="button" data-bs-toggle='modal' data-bs-target='#modal-add-classroom' class="btn btn-primary" >添加新教室</button>
+                                        <button type="button" data-bs-toggle='modal' data-bs-target='#modal-add-classroom-available' class="btn btn-primary">新增教室可用时段</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="display nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>教室</th>
+                                            <th>教室号</th>
+                                            <th>楼层</th>
+                                            <th>教学楼</th>
+                                            <th>座位数</th>
+                                            <th>多媒体教室</th>
+                                            <th></th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+
+                                        <tr th:each="classroom:${classrooms}">
+                                            <td th:text="${classroom.getRoom_name()}"></td>
+                                            <td th:text="${classroom.getRoom_id()}"></td>
+                                            <td th:text="${classroom.getRoom_floor()}"></td>
+                                            <td th:text="${classroom.getT_building().getBuilding_name()}"></td>
+                                            <td th:text="${classroom.getAvailable_seat()}"></td>
+                                            <td th:text="${classroom.getIs_multimedia_room()}"></td>
+                                            <td>
+                                                <a data-bs-toggle='modal' th:attr="data-bs-target='#modal-edit'+${classroom.getRoom_id()}"  class='mr-4'>
+                                                    <span class='fas fa-pencil-alt'></span>
+                                                </a>
+                                                <a data-bs-toggle='modal' th:attr="data-bs-target='#modal-delete-classroom'+${classroom.getRoom_id()}"  class='mr-4'>
+                                                    <span class='fas fa-trash-alt'></span>
+                                                </a>
+
+                                                <div class="modal fade" th:attr="id='modal-edit'+${classroom.getRoom_id()}"  tabindex="-1" aria-labelledby="modal-title-edit-row" aria-hidden="true">
+                                                    <form class="modal-dialog modal-lg" th:action="@{/updateClassroomInfo}">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title" id="modal-title-edit-row">教室信息</h5>
+                                                                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="container-fluid">
+                                                                    <div class="row">
+                                                                        <div class="basic-form">
+                                                                            <form>
+                                                                                <div class="row">
+                                                                                    <div class="col-xl-4">
+                                                                                        <div class="form-group">
+                                                                                            <input type="text" class="form-control" th:placeholder="${classroom.getRoom_id()}" th:value="${classroom.getRoom_id()}" readonly name="room_id">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-4">
+                                                                                        <div class="form-group">
+                                                                                            <input type="text" class="form-control" placeholder="教室名称" name="room_name">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-4">
+                                                                                        <div class="form-group">
+                                                                                            <input type="text" class="form-control" placeholder="教室楼层" name="room_floor">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <div class="row">
+                                                                                    <div class="col-xl-4">
+                                                                                        <div class="form-group row">
+                                                                                            <div class="col-lg-12">
+                                                                                                <input type="text" class="form-control" placeholder="教室座位数" name="available_seat">
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                    <div class="col-xl-4">
+                                                                                        <div class="form-group row">
+                                                                                            <div class="col-lg-12">
+                                                                                                <select class="form-control form-select" name="is_multimedia_room">
+                                                                                                    <option value="" style="display: none">是否为多媒体教室</option>
+                                                                                                    <option>是</option>
+                                                                                                    <option>否</option>
+                                                                                                </select>
+                                                                                            </div>
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">确认修改</button>
+                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal fade" th:attr="id='modal-delete-classroom'+${classroom.getRoom_id()}"  tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-modal">
+                                                    <div class="modal-dialog modal-dialog-centered" role="document" >
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <h5 class="modal-title">
+                                                                    提示信息
+                                                                </h5>
+                                                                <button type="button" class="close"
+                                                                        data-bs-dismiss="modal" aria-label="Close"><span
+                                                                        aria-hidden="true">&times;</span></button>
+                                                            </div>
+                                                            <div class="modal-body top-info">
+                                                                <p style="font-size: 22px;font-weight: bold">是否确认删除该教学楼</p>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <a type="button" class="btn badge-primary" th:href="@{/classroom_delete(room_id=${classroom.getRoom_id()})}">
+                                                                    确认删除
+                                                                </a>
+                                                                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">
+                                                                    关闭
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}" class="text-center"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+
+
+</div>
+
+
+
+
+<!-- Modal -->
+
+<form class="modal fade" id="modal-delete" tabindex="-1"
+     role="dialog" aria-labelledby="modal-title-edit-modal" th:action="@{/all_classroom_delete}">
+    <div class="modal-dialog modal-dialog-centered"
+         role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">
+                    提示信息
+                </h5>
+                <button type="button" class="close"
+                        data-bs-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+            </div>
+            <div class="modal-body top-info">
+                <p style="font-size: 22px;font-weight: bold">是否确认删除</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary">
+                    提交更改
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="modal fade" id='modal-add-classroom'  tabindex="-1" aria-labelledby="modal-title-edit-row" aria-hidden="true">
+    <form class="modal-dialog modal-lg" th:action="@{/add_new_classroom}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">教室信息</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="basic-form">
+                            <form>
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="教室编号" name="room_id">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" placeholder="教室名称" name="room_name">
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <select class="form-control form-select" name="room_floor">
+                                                <option value="" style="display: none">教室楼层</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <input type="text" class="form-control" placeholder="教室座位数" name="available_seat">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <select class="form-control form-select" name="building_id">
+                                                    <option value="" style="display: none">所属教学楼编号</option>
+                                                    <option>1</option>
+                                                    <option>2</option>
+                                                    <option>3</option>
+                                                    <option>4</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="col-lg-12">
+                                                <select class="form-control form-select" name="is_multimedia_room">
+                                                    <option value="" style="display: none">是否为多媒体教室</option>
+                                                    <option>是</option>
+                                                    <option>否</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">确认添加</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal fade" id='modal-add-classroom-available'  tabindex="-1" aria-labelledby="modal-title-edit-row" aria-hidden="true">
+    <form class="modal-dialog modal-lg" th:action="@{/add_new_classroom_available}">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">教室信息</h5>
+                <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="basic-form">
+                            <form>
+                                <div class="row">
+
+                                    <div class="col-xl-6">
+                                        <div class="form-group">
+                                            <select class="form-control form-select" name="room_id">
+                                                <option value="" style="display: none">教室编号</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="form-group">
+                                            <select class="form-control form-select" name="time_id">
+                                                <option value="" style="display: none">时段编号</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                                <option>3</option>
+                                                <option>4</option>
+                                                <option>5</option>
+                                                <option>6</option>
+                                                <option>7</option>
+                                                <option>8</option>
+                                                <option>9</option>
+                                                <option>10</option>
+                                                <option>11</option>
+                                                <option>12</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-6">
+                                        <div class="form-group row">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="座位数" name="available_num">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-xl-4">
+                                        <div class="form-group">
+                                            <select class="form-control form-select" name="building_id">
+                                                <option value="" style="display: none">所属教学楼</option>
+                                                <option>1</option>
+                                                <option>2</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                        <div class="form-group row">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" placeholder="日期" name="available_date">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-xl-4">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">确认添加</button>
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">关闭</button>
+            </div>
+        </div>
+    </form>
+</div>
+<!--End Modal -->
+
+<!-- JQuery v3.5.1 -->
+<script th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+
+<!-- popper js -->
+<script th:src="@{/assets/plugins/popper/popper.min.js}"></script>
+
+<!-- Bootstrap -->
+<script th:src="@{/assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Moment -->
+<script th:src="@{/assets/plugins/moment/moment.min.js}"></script>
+
+<!-- Date Range Picker -->
+<script th:src="@{/assets/plugins/daterangepicker/daterangepicker.min.js}"></script>
+
+<!-- Datatable -->
+<script th:src="@{/assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/init-tdatatable.js}"></script>
+
+<!-- Main Custom JQuery -->
+<script th:src="@{/assets/js/toggleFullScreen.js}"></script>
+<script th:src="@{/assets/js/main.js}"></script>
+
+</body>
+
+</html>

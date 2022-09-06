@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>学生预约管理-自习预约管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png">
+    <!-- Base Styling  -->
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+    <!--        &lt;!&ndash; start logo components &ndash;&gt;-->
+    <!--        <div th:replace="~{commons/common::banner_logo}"></div>-->
+    <!--        &lt;!&ndash; End logo components &ndash;&gt;-->
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::student_sidebar}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="new_appointment main_container">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4 class="text-primary">我的预约</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/student_index}">首页</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/user_reservation}">我的预约</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card shadow">
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table id="example1" class="display nowrap">
+                                        <thead>
+                                        <tr>
+                                            <th>学生</th>
+                                            <th>学号</th>
+                                            <th>预约教室</th>
+                                            <th>教学楼</th>
+                                            <th>预约时间</th>
+                                            <th>日期</th>
+                                            <th>预约状态</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <div th:each="student:${students}">
+                                            <tr th:each="studentReservation:${student.getStudentReservations()}">
+                                                <td th:text="${student.getS_name()}"></td>
+                                                <td th:text="${studentReservation.getS_id()}"></td>
+                                                <td th:text="${studentReservation.getRoom_name()}"></td>
+                                                <td th:text="${studentReservation.getBuilding_id()}"></td>
+                                                <td th:text="${studentReservation.getRoomAvailableTimeInfo().getTimeTable().getTime_begin()}
+                                                        + '——'
+                                                        + ${studentReservation.getRoomAvailableTimeInfo().getTimeTable().getTime_end()}"></td>
+                                                <td th:text="${studentReservation.getReservation_date()}"></td>
+                                                <td class="text-start">
+                                                    <span th:class="${studentReservation.getState()=='预约成功'?'badge badge-success':'badge badge-danger'}" th:text="${studentReservation.getState()}"></span>
+                                                    <span type="button" class="badge badge-warning edit" data-bs-toggle='modal' th:attr="data-bs-target='#modal-cancel'+${studentReservation.getRoom_name()}+${studentReservation.getTime_id()}" >
+                                                        取消预约
+                                                    </span>
+
+                                                    <div class="modal fade" th:attr="id='modal-cancel'+${studentReservation.getRoom_name()}+${studentReservation.getTime_id()}"  tabindex="-1" role="dialog" aria-labelledby="modal-title-edit-modal">
+                                                        <div class="modal-dialog modal-dialog-centered"
+                                                             role="document">
+                                                            <div class="modal-content">
+                                                                <div class="modal-header">
+                                                                    <h5 class="modal-title">
+                                                                        提示信息
+                                                                    </h5>
+                                                                    <button type="button" class="close"
+                                                                            data-bs-dismiss="modal" aria-label="Close"><span
+                                                                            aria-hidden="true">&times;</span></button>
+                                                                </div>
+                                                                <div class="modal-body top-info">
+                                                                    <p style="font-size: 22px;font-weight: bold">是否取消预约</p>
+                                                                </div>
+                                                                <div class="modal-footer">
+                                                                    <a type="button" class="btn badge-primary" th:href="@{/cancel_reservation(s_id=${studentReservation.getS_id()},room_id=${studentReservation.getRoom_id()},time_id=${studentReservation.getTime_id()},reservation_date=${studentReservation.getReservation_date()},building_id=${studentReservation.getBuilding_id()})}">确认取消
+                                                                    </a>
+                                                                    <button type="button" class="btn btn-danger"
+                                                                            data-bs-dismiss="modal">关闭
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        </div>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+</div>
+
+
+
+
+<!-- JQuery v3.5.1 -->
+<script th:src="@{/assets/plugins/jquery/jquery.min.js}"></script>
+
+<!-- popper js -->
+<script th:src="@{assets/plugins/popper/popper.min.js}"></script>
+
+<!-- Bootstrap -->
+<script th:src="@{assets/plugins/bootstrap/js/bootstrap.min.js}"></script>
+
+<!-- Moment -->
+<script th:src="@{assets/plugins/moment/moment.min.js}"></script>
+
+<!-- Date Range Picker -->
+<script th:src="@{assets/plugins/daterangepicker/daterangepicker.min.js}"></script>
+
+<!-- Datatable -->
+<script th:src="@{assets/plugins/datatables/jquery.dataTables.min.js}"></script>
+<script th:src="@{/assets/js/init-tdatatable.js}"></script>
+
+<!-- Main Custom JQuery -->
+<script th:src="@{assets/js/toggleFullScreen.js}"></script>
+<script th:src="@{assets/js/main.js}"></script>
+
+</body>
+
+</html>

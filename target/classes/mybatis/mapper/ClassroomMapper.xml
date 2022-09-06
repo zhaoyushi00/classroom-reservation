@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.mango.dao.ClassroomDao">
+
+    <!--   获取所有教室-->
+    <select id="getAll" parameterType="Map" resultMap="classroomInfo">
+        select c.room_name,
+               c.room_floor,
+               tb.building_name,
+               c.available_seat,
+               c.is_multimedia_room,
+               c.room_id,
+               tb.building_id t_building_id,
+               c.building_id
+        from reservation_demo.classroom c,
+             reservation_demo.t_building tb
+        where c.building_id = tb.building_id
+
+    </select>
+
+    <resultMap id="classroomInfo" type="Classroom">
+        <id property="room_id" column="room_id"/>
+        <id property="building_id" column="building_id"/>
+        <result property="room_name" column="room_name"/>
+        <result property="room_floor" column="room_floor"/>
+        <result property="available_seat" column="available_seat"/>
+        <result property="is_multimedia_room" column="is_multimedia_room"/>
+        <association property="t_building" javaType="T_building">
+            <id property="building_id" column="t_building_id"/>
+            <result property="building_name" column="building_name"/>
+        </association>
+    </resultMap>
+
+
+    <!--  更新教室信息-->
+    <update id="updateClassroom" parameterType="Map">
+        update reservation_demo.classroom
+        <set>
+            <if test="room_name != null">
+                room_name = #{room_name},
+            </if>
+            <if test="room_floor != null">
+                room_floor = #{room_floor},
+            </if>
+            <if test="available_seat != null">
+                available_seat = #{available_seat},
+            </if>
+            <if test="is_multimedia_room != null">
+                is_multimedia_room = #{is_multimedia_room}
+            </if>
+        </set>
+        where room_id = #{room_id}
+    </update>
+
+
+    <!--    更新教室可用时段座位数-->
+    <update id="updateRoomAvailableTimeInfo" parameterType="RoomAvailableTimeInfo">
+        update reservation_demo.room_available_time_info
+        <set>
+            <if test="reservation_num != null">
+                reservation_num = #{reservation_num},
+            </if>
+            <if test="available_num != null">
+                available_num = #{available_num},
+            </if>
+        </set>
+        where time_id = #{time_id} and room_id = #{room_id} and building_id = #{building_id} and available_date =
+        #{available_date}
+    </update>
+
+    <!--    根据四个主键获得两个座位数-->
+    <update id="updateDeleteRoomAvailableSeatInfo" parameterType="RoomAvailableTimeInfo">
+        update reservation_demo.room_available_time_info
+        set reservation_num = reservation_num - 1,
+            available_num   = available_num + 1
+        where time_id = #{time_id}
+          and room_id = #{room_id}
+          and building_id = #{building_id}
+          and available_date = #{available_date}
+    </update>
+
+    <!--    根据room_id获得该教室预约数量-->
+    <select id="getClassroomReserved" resultType="int">
+        select count(1) nums
+        from reservation_demo.student_reservation
+        where room_id = #{room_id}
+    </select>
+
+    <delete id="deleteClassroom">
+        delete
+        from reservation_demo.classroom
+        where room_id = #{room_id}
+    </delete>
+
+    <delete id="deleteClassroomTimeTable">
+        delete
+        from reservation_demo.time_table
+        where room_id = #{room_id}
+    </delete>
+
+    <delete id="deleteClassroomAvailableTime">
+        delete
+        from reservation_demo.room_available_time_info
+        where room_id = #{room_id}
+    </delete>
+
+    <!--    添加新教室-->
+    <insert id="addClassroom" parameterType="Classroom">
+        insert into reservation_demo.classroom(room_id, room_name, building_id, room_floor, available_seat, is_multimedia_room)
+        values (#{room_id},#{room_name},#{building_id},#{room_floor},#{available_seat},#{is_multimedia_room})
+    </insert>
+
+
+    <insert id="addClassroomAvailable" parameterType="RoomAvailableTimeInfo">
+        insert into reservation_demo.room_available_time_info(time_id, room_id, building_id, available_date, reservation_num, available_num)
+        values (#{time_id},#{room_id},#{building_id},#{available_date},#{reservation_num},#{available_num})
+    </insert>
+</mapper>

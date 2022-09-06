@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>预约-自习管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png">
+    <!-- Base Styling  -->
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::student_sidebar}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="doctorino_settings main_container">
+                <div class="row page-titles mx-0">
+                    <div class="col-sm-6 p-md-0">
+                        <div class="welcome-text">
+                            <h4 class="text-primary">预约教室</h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-6 p-md-0 justify-content-sm-end mt-2 mt-sm-0 d-flex">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a th:href="@{/student_index}">首页</a></li>
+                            <li class="breadcrumb-item active"><a th:href="@{/make_reservation}">添加预约</a>
+                            </li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"> 选择教室 </h4>
+                    </div>
+                    <form class="card-body" th:action="@{/make_reservation}" method="post">
+
+                        <div class="row" >
+                            <div class="col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label class="form-label">校区<span class="text-danger">*</span></label>
+                                        <select class="form-control form-select" name="selectLocation">
+                                            <option value="" style="display: none">选择校区</option>
+                                            <option>南校区</option>
+                                            <option>北校区</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label class="form-label">教学楼</label>
+                                        <select class="form-control form-select" name="selectBuildingName">
+                                            <option value="" style="display: none">选择教学楼</option>
+                                            <option>慕贤</option>
+                                            <option>弘毅</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label class="form-label">教室名称</label>
+                                        <select class="form-control form-select" name="selectRoomName">
+                                            <option value="" style="display: none">选择教室</option>
+                                            <option>教室一</option>
+                                            <option>教室二</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label class="form-label">教室楼层</label>
+                                        <select class="form-control form-select" name="selectRoomFloor">
+                                            <option value="" style="display: none">选择教室楼层</option>
+                                            <option>1</option>
+                                            <option>2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label class="form-label">预约时间段</label>
+                                        <select class="form-control form-select" name="selectTime">
+                                            <option value="" style="display: none">预约时间</option>
+                                            <option>07:00:00--08:00:00</option>
+                                            <option>08:00:00--09:00:00</option>
+                                            <option>09:00:00--10:00:00</option>
+                                            <option>10:00:00--11:00:00</option>
+                                            <option>11:00:00--12:00:00</option>
+                                            <option>12:00:00--13:00:00</option>
+                                            <option>13:00:00--14:00:00</option>
+                                            <option>14:00:00--15:00:00</option>
+                                            <option>15:00:00--16:00:00</option>
+                                            <option>16:00:00--17:00:00</option>
+                                            <option>17:00:00--18:00:00</option>
+                                            <option>18:00:00--19:00:00</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label>日期</label>
+                                        <input id="daterange" class="form-control input-daterange-datepicker" name="selectDate">
+                                    </div>
+                                </div>
+                                <div class="form-group text-end">
+                                    <button type="submit" class="btn btn-primary" >搜索</button>
+                                    <button type="submit" class="btn btn-success" >预约</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example1" class="display nowrap dataTable">
+                                                <thead>
+                                                    <tr>
+                                                        <th>校区</th>
+                                                        <th>教学楼</th>
+                                                        <th>教室名称</th>
+                                                        <th>楼层</th>
+                                                        <th>时段</th>
+                                                        <th>日期</th>
+                                                        <th>可预约数量</th>
+                                                        <th></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <div th:each="availableClassroom:${allAvailableClassrooms}">
+                                                        <tr th:each="roomAvailableTimeInfo:${availableClassroom.getRoomAvailableTimeInfos()}">
+                                                            <td th:text="${availableClassroom.getT_building().getBuilding_location()}"></td>
+                                                            <td th:text="${availableClassroom.getT_building().getBuilding_name()}"></td>
+                                                            <td th:text="${availableClassroom.getRoom_name()}"></td>
+                                                            <td th:text="${availableClassroom.getRoom_floor()}"></td>
+                                                            <td th:text="${roomAvailableTimeInfo.getTimeTable().getTime_begin()}
+                                                             + '——'
+                                                             + ${roomAvailableTimeInfo.getTimeTable().getTime_end()} ">
+                                                            </td>
+                                                            <td th:text="${roomAvailableTimeInfo.getAvailable_date()}"></td>
+                                                            <td th:text="${roomAvailableTimeInfo.getAvailable_num()}"></td>
+                                                            <td>
+                                                                <input type="checkbox" class="checkbox" name="selectedCheckbox" th:value="${roomAvailableTimeInfo.getTime_id()} + '-' + ${roomAvailableTimeInfo.getRoom_id()}">
+                                                            </td>
+                                                        </tr>
+                                                    </div>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-reservation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Modal -->
+
+
+
+<!-- JQuery v3.5.1 -->
+<script src="assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- popper js -->
+<script src="assets/plugins/popper/popper.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Moment -->
+<script src="assets/plugins/moment/moment.min.js"></script>
+
+<!-- Date Range Picker -->
+<script src="assets/plugins/daterangepicker/daterangepicker.min.js"></script>
+
+<!-- Datatable -->
+<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/js/init-tdatatable.js"></script>
+
+<!-- Main Custom JQuery -->
+<script src="assets/js/toggleFullScreen.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>

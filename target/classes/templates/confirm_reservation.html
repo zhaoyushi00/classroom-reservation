@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>预约-自习管理系统</title>
+    <!-- Favicon icon -->
+    <link rel="icon" type="image/png" href="assets/images/favicon-32x32.png">
+    <!-- Base Styling  -->
+    <link rel="stylesheet" th:href="@{/assets/main/css/fonts.css}">
+    <link rel="stylesheet" th:href="@{/assets/main/css/style.css}">
+</head>
+
+<body>
+<div id="main-wrapper" class="show">
+
+
+    <!-- start section sidebar -->
+    <div th:replace="~{commons/common::student_sidebar}"></div>
+    <!-- End section sidebar -->
+
+
+    <!-- start section header -->
+    <div th:replace="~{commons/common::header}"></div>
+    <!-- End section header -->
+
+
+    <!-- start section content -->
+    <div class="content-body">
+        <div class="warper container-fluid">
+            <div class="doctorino_settings main_container">
+
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title"> 确认预约 </h4>
+                    </div>
+                    <form class="card-body" th:action="@{/reservation_check}">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card shadow">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table id="example1" class="display nowrap dataTable">
+                                                <thead>
+                                                <tr>
+                                                    <th>校区</th>
+                                                    <th>教学楼</th>
+                                                    <th>教室名称</th>
+                                                    <th>楼层</th>
+                                                    <th>时段</th>
+                                                    <th>日期</th>
+                                                    <th>可预约数量</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody>
+                                                <div th:each="availableClassroom:${allSelectClassrooms}">
+                                                    <tr th:each="roomAvailableTimeInfo:${availableClassroom.getRoomAvailableTimeInfos()}">
+                                                        <td th:text="${availableClassroom.getT_building().getBuilding_location()}"></td>
+                                                        <td th:text="${availableClassroom.getT_building().getBuilding_name()}"></td>
+                                                        <td th:text="${availableClassroom.getRoom_name()}"></td>
+                                                        <td th:text="${availableClassroom.getRoom_floor()}"></td>
+                                                        <td th:text="${roomAvailableTimeInfo.getTimeTable().getTime_begin()}
+                                                             + '——'
+                                                             + ${roomAvailableTimeInfo.getTimeTable().getTime_end()} ">
+                                                        </td>
+                                                        <td th:text="${roomAvailableTimeInfo.getAvailable_date()}"></td>
+                                                        <td th:text="${roomAvailableTimeInfo.getAvailable_num()}"></td>
+                                                    </tr>
+                                                </div>
+                                                </tbody>
+
+                                            </table>
+
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="form-group text-right">
+                                    <button type="submit" class="btn btn-success float-end edit" data-bs-toggle='modal' data-bs-target='#changePersonalInfo'>
+                                        确认预约
+                                    </button>
+                                </div>
+                                <p style="color: red" th:text="${msg}" th:if="${not #strings.isEmpty(msg)}" class="text-center"></p>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End section content -->
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="modal-reservation" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--End Modal -->
+
+
+
+<!-- JQuery v3.5.1 -->
+<script src="assets/plugins/jquery/jquery.min.js"></script>
+
+<!-- popper js -->
+<script src="assets/plugins/popper/popper.min.js"></script>
+
+<!-- Bootstrap -->
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+
+<!-- Moment -->
+<script src="assets/plugins/moment/moment.min.js"></script>
+
+<!-- Date Range Picker -->
+<script src="assets/plugins/daterangepicker/daterangepicker.min.js"></script>
+
+<!-- Datatable -->
+<script src="assets/plugins/datatables/jquery.dataTables.min.js"></script>
+<script src="assets/js/init-tdatatable.js"></script>
+
+<!-- Main Custom JQuery -->
+<script src="assets/js/toggleFullScreen.js"></script>
+<script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
