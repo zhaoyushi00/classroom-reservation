@@ -54,9 +54,6 @@ public class LoginController {
         }
     }
 
-    public void getConstantData() {
-
-    }
 
 
 }
