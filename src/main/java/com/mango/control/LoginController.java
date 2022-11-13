@@ -15,6 +15,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Map;
 
+/**
+ * 登录接口，进行登录判断
+ */
 @Controller
 public class LoginController {
 

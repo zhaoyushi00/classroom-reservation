@@ -77,7 +77,12 @@ public class SettingController {
     }
 
 
-
+    /**
+     * 修改密码
+     * @param request
+     * @param model
+     * @return
+     */
     @GetMapping("/changePassword")
     public String changePassword(HttpServletRequest request, Model model) {
         Student loginUser = CommonUtil.getLoginUser(request);

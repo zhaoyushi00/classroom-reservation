@@ -9,6 +9,11 @@ import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
+
+/**
+ * 通用工具类
+ * 获取当前用户登录信息id等
+ */
 @Component("CommonUtil")
 public class CommonUtil {
     public static Student getLoginUser(HttpServletRequest request) {
@@ -16,7 +21,6 @@ public class CommonUtil {
         if (session == null) {
             return null;
         }
-
         return (Student) session.getAttribute(WebConstant.LOGIN_USER);
     }
 
