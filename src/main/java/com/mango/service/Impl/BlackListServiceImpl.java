@@ -1,6 +1,5 @@
 package com.mango.service.Impl;
 
-import com.antfinancial.mychain.baas.tool.restclient.RestClient;
 import com.mango.constant.WebConstant;
 import com.mango.dao.BlackListDao;
 import com.mango.pojo.BlackList;
